@@ -1,0 +1,22 @@
+---
+# This role installs httpd
+
+- name: Install httpd and modules
+  yum: name={{ item }} state=present
+  with_items:
+   - httpd
+#   - mod_ssl
+#   - mod_security
+
+- name: Copy over the httpd.conf file
+  copy: src=httpd.conf dest=/etc/httpd/conf/httpd.conf
+
+- name: check if virtual_hosts directory exists
+  file: path=/opt/azphp/conf/httpd state=directory
+
+- name: httpd service state
+  service: name=httpd state=started enabled=yes
+
+- name: insert iptables rule for httpd
+  lineinfile: dest=/etc/sysconfig/iptables create=yes state=present regexp="80" insertafter="^:OUTPUT " line="-A INPUT -p tcp  --dport 80 -j  ACCEPT"
+  notify: restart iptables

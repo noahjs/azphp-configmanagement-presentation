@@ -1,0 +1,33 @@
+---
+# This role will install MySQL and create db user and give permissions.
+
+- name: Install Mysql package
+  yum: name={{ item }} state=present
+  with_items:
+   - mysql-server
+   - MySQL-python
+
+- name: Create Mysql configuration file
+  template: src=my.cnf.j2 dest=/etc/my.cnf
+  notify: 
+  - restart mysql
+
+- name: Start Mysql Service
+  service: name=mysqld state=started enabled=true
+
+- name: Create Application Databases
+  mysql_db: name={{ item }} state=present
+  with_items:
+   - application
+   - blog
+
+- name: Create DEV Application DB User @ localhost
+  mysql_user: name=app password=app priv=*.*:ALL host='localhost' state=present
+
+- name: Create DEV Application DB User @ %
+  mysql_user: name=app password=app priv=*.*:ALL host='%' state=present
+
+- name: insert iptables rule for MySQL
+  lineinfile: dest=/etc/sysconfig/iptables create=yes state=present regexp="3306" insertafter="^:OUTPUT "
+              line="-A INPUT -p tcp  --dport 3306 -j  ACCEPT"
+  notify: restart iptables

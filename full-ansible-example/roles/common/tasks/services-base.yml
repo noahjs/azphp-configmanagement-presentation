@@ -1,0 +1,16 @@
+---
+
+- name: Create Base Directory
+  file: path=/opt/azphp state=directory
+
+- name: Create Conf Directory
+  file: path=/opt/azphp/conf state=directory
+
+- name: Write environment.php file, ENV is {{ deployed_environment }}
+  template: src=env.php dest=/opt/azphp/conf/env.php
+
+- name: Create Conf Directory | Databases
+  file: path=/opt/azphp/conf/databases state=directory
+
+- name: Create Conf Directory | Vendors
+  file: path=/opt/azphp/conf/vendors state=directory

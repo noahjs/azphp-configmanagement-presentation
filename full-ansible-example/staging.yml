@@ -1,0 +1,19 @@
+# Apply common configuration to all hosts
+- hosts: all
+  sudo: true
+  vars:
+    deployed_environment: development
+  roles:
+    - common
+    - deployment
+
+- hosts: staging
+  sudo: true
+  vars:
+    deployed_environment: staging
+    in_development: false
+  roles:
+    - httpd
+    - php
+
+    - azphp-appnamehere

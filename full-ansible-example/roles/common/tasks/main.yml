@@ -1,0 +1,10 @@
+---
+
+- name: Setup Box DNS
+  copy: src=resolv.conf dest=/etc/resolv.conf
+
+- include: repos.yml
+- include: tools.yml
+- include: monitoring.yml
+- include: users.yml
+- include: services-base.yml

@@ -1,0 +1,41 @@
+---
+# This role installs a Service
+
+- name: Verify existance of service config directories
+  file: path={{ item }} state=directory
+  with_items:
+    - "/opt/azphp/conf"
+    - "/opt/azphp/conf/databases"
+    - "/opt/azphp/conf/httpd"
+
+- name: Deploy MySQL config
+  copy: "src=secure/{{ deployed_environment }}/mysql-azphp-appnamehere.yml dest=/opt/azphp/conf/databases/mysql-azphp-appnamehere.yml"
+
+- name: Deploy httpd config
+  copy: src=vhost-azphp-appnamehere.conf dest=/opt/azphp/conf/httpd/vhost-azphp-appnamehere.conf
+
+- name: Deploy Vendor Configs that we need
+  copy: src=secure/vendors/{{ item }} dest=/opt/azphp/conf/vendors/{{ item }}
+  with_items:
+    - "vendor-1.php"
+    - "vendor-2.php"
+
+- name: Deploy Service
+  git: repo=ssh://git@github.com/noahjs/azphp-appnamehere.git accept_hostkey=yes version={{ service_azphp_appnamehere }} dest=/opt/azphp/azphp-appnamehere
+
+- name: Sets ACLs on laravel storage repos
+  file: name={{ item }} owner=apache group=apache mode=0755 state=directory
+  with_items:
+    - "/opt/azphp/azphp-appnamehere/app/storage"
+    - "/opt/azphp/azphp-appnamehere/app/storage/cache"
+    - "/opt/azphp/azphp-appnamehere/app/storage/debugbar"
+    - "/opt/azphp/azphp-appnamehere/app/storage/logs"
+    - "/opt/azphp/azphp-appnamehere/app/storage/meta"
+    - "/opt/azphp/azphp-appnamehere/app/storage/sessions"
+    - "/opt/azphp/azphp-appnamehere/app/storage/views"
+
+- name: Install composer dependencies
+  composer: prefer_dist=yes prefer_source=yes working_dir=/opt/azphp/azphp-appnamehere
+
+- name: httpd service state
+  service: name=httpd state=started enabled=yes

@@ -1,0 +1,1 @@
+<?php define('ENVIRONMENT', '{{ deployed_environment }}');

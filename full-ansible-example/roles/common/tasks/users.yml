@@ -1,0 +1,8 @@
+---
+# This role contains common plays that will run on all nodes.
+
+
+# Include users + ssh keys
+
+
+# ...

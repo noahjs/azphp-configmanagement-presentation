@@ -1,0 +1,19 @@
+---
+# This role contains common plays that will run on all nodes.
+
+
+# Dev tools install
+- name: install the 'Development tools' package group
+  yum: name="@Development tools" state=present
+  tags: common-tools
+
+#Install Libs that we use allll.. the time
+- name: Install common Tools
+  yum: name={{ item }} state=present
+  with_items:
+   - git
+   - vim
+   - unzip
+   - make
+   - wget
+   - curl

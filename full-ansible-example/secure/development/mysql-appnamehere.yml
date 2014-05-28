@@ -1,0 +1,11 @@
+development:
+  application:
+    host: localhost
+    database: application
+    username: app
+    password: app
+  blog:
+    host: localhost
+    database: blog
+    username: app
+    password: app

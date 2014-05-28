@@ -1,0 +1,5 @@
+---
+dependencies:
+  - { role: deployment }
+  - { role: php }
+  - { role: httpd }

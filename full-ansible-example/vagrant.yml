@@ -1,0 +1,18 @@
+# Apply common configuration to all hosts
+- hosts: all
+  sudo: true
+  vars:
+    deployed_environment: development
+  roles:
+    - common
+    - deployment
+
+
+- hosts: vagrant
+  sudo: true
+  roles:
+    - db
+    - httpd
+    - php
+
+    - azphp-appnamehere

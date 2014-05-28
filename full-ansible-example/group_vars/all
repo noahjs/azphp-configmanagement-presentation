@@ -1,0 +1,21 @@
+---
+# Variables here are applicable to all host groups
+
+
+
+host_ntpserver: 192.168.1.2
+
+
+# Variables for AZPHP Services
+
+# ==================
+# These variables are used
+# for deployment of our services
+# ==================
+
+
+# Checksum of version to deploy
+#service_xxxx_version: 351e47276xxxxxxxxxxd3d3edb0d
+
+#REPOS
+service_azphp_appnamehere: dbab5701053bc22dee70f05a9796f73f48ad227b

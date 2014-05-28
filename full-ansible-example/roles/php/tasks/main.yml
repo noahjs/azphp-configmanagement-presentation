@@ -1,0 +1,54 @@
+---
+
+# Add Webtatic Repo
+- name: Add webtatic keys
+  rpm_key: state=present key=http://repo.webtatic.com/yum/RPM-GPG-KEY-webtatic-andy
+
+- name: Add repo from webtatic.com
+  command: rpm -Uvh http://mirror.webtatic.com/yum/el6/latest.rpm
+  ignore_errors: True
+
+- name: Copy over Webtatic repo file
+  copy: src=webtatic.repo dest=/etc/yum.repos.d/
+
+#Install PHP
+- name: Install php
+  yum: name={{ item }} state=present
+  with_items:
+   - php55w
+   - php55w-common
+   - php55w-devel
+   - php55w-cli
+   - php55w-gd
+   - php55w-mcrypt
+   - php55w-mbstring
+   - php55w-mysql
+   - php55w-pecl-memcache
+   - php55w-opcache
+   - php55w-process
+   - php55w-xml
+
+- name: Copy over the PHP.ini file
+  copy: src=php.ini dest=/etc/php.ini
+  notify: restart httpd
+
+# Install composer
+- name: check if /usr/local/bin/composer exists
+  shell: test -x /usr/local/bin/composer
+  ignore_errors: True
+  register: phpComposerNotInstalled
+
+- name: install composer
+  shell: >
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
+  when: "phpComposerNotInstalled.rc != 0"
+
+- name: move composer.phar to /usr/local/bin/composer
+  shell: >
+    mv /usr/local/bin/composer.phar /usr/local/bin/composer
+  when: "phpComposerNotInstalled.rc != 0"
+
+# Add PHP Unit
+#wget https://phar.phpunit.de/phpunit.phar
+#chmod +x phpunit.phar
+#sudo mv phpunit.phar /usr/local/bin/phpunit

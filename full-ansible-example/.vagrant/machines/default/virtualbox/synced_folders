@@ -1,0 +1,1 @@
+{"virtualbox":{"/opt/azphp":{"mount_options":["dmode=777","fmode=666"],"guestpath":"/opt/azphp","hostpath":"/Users/noahs/azphp-configmanagement-presentation/full-ansible-example"},"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/noahs/azphp-configmanagement-presentation/full-ansible-example"}}}
